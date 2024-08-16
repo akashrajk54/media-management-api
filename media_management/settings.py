@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +27,14 @@ SECRET_KEY = "django-insecure-x((c@b#zs)ctzzdy_&e9c_*pe(8w-%mr+*yvsif#6qxc(#56*t
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "backends_engine.authentication.StaticTokenAuthentication",
+    ],
+    "EXCEPTION_HANDLER": "media_management.exception_handler.custom_exception_handler",
+}
 
 
 # Application definition
@@ -122,3 +131,88 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# TODO:Akash Load this from .env file
+API_STATIC_TOKEN = "12345abcde67890fghij09876klmnop54321"
+
+
+# TODO:Akash Load this from .env file
+# SMTP email backend
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "testnayara2@gmail.com"
+EMAIL_HOST_PASSWORD = "hakpzckvjzrbivrh"
+
+
+# Logger configuration
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Formatters
+FORMATTERS = {
+    "verbose": {
+        "format": "{levelname} TIME: {asctime:s} MODULE: {module} LINENO: {lineno:d} MESSAGE: {message}",
+        "style": "{",
+    },
+    "simple": {
+        "format": "{levelname} TIME: {asctime:s} MODULE: {module} LINENO: {lineno:d} MESSAGE: {message}",
+        "style": "{",
+    },
+}
+
+# Handlers
+HANDLERS = {
+    "debug_handler": {
+        "class": "media_management.custom_log_handlers.DateRotatingFileHandler",
+        "base_filename": os.path.join(BASE_DIR, "logs/debug/", "debug_log"),
+        "when": "midnight",
+        "backupCount": 30,
+        "formatter": "verbose",
+        "encoding": "utf-8",
+    },
+    "info_handler": {
+        "class": "media_management.custom_log_handlers.DateRotatingFileHandler",
+        "base_filename": os.path.join(BASE_DIR, "logs/info/", "info_log"),
+        "when": "midnight",
+        "backupCount": 30,
+        "formatter": "verbose",
+        "encoding": "utf-8",
+    },
+    "error_handler": {
+        "class": "media_management.custom_log_handlers.DateRotatingFileHandler",
+        "base_filename": os.path.join(BASE_DIR, "logs/error/", "error_log"),
+        "when": "midnight",
+        "backupCount": 30,
+        "formatter": "simple",
+        "encoding": "utf-8",
+    },
+}
+
+# Loggers
+LOGGERS = {
+    "debug": {
+        "handlers": ["debug_handler"],
+        "level": "DEBUG",
+        "propagate": False,
+    },
+    "info": {
+        "handlers": ["info_handler"],
+        "level": "INFO",
+        "propagate": False,
+    },
+    "error": {
+        "handlers": ["error_handler"],
+        "level": "ERROR",
+        "propagate": False,
+    },
+}
+
+# Logging configuration
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": FORMATTERS,
+    "handlers": HANDLERS,
+    "loggers": LOGGERS,
+}
