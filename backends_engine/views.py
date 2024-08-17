@@ -4,8 +4,8 @@ from backends_engine.authentication import StaticTokenAuthentication
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backends_engine.models import VideoUpload, TrimmedVideo
-from backends_engine.serializers import (UploadedVideoSerializer, TrimmedVideoSerializer)
+from backends_engine.models import (VideoUpload, TrimmedVideo, MergedVideo)
+from backends_engine.serializers import (UploadedVideoSerializer, TrimmedVideoSerializer, MergedVideoSerializer)
 from backends_engine.utils import (success_true_response, success_false_response, validate_single_file_upload)
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -86,6 +86,7 @@ class UploadedVideoViewSet(viewsets.ModelViewSet):
             )
 
 
+@authentication_classes([StaticTokenAuthentication])
 class TrimmedVideoViewSet(viewsets.ModelViewSet):
     queryset = TrimmedVideo.objects.all()
     serializer_class = TrimmedVideoSerializer
@@ -142,3 +143,58 @@ class TrimmedVideoViewSet(viewsets.ModelViewSet):
             logger_error.error(message)
             return Response(success_false_response(message=message), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+@authentication_classes([StaticTokenAuthentication])
+class MergedVideoViewSet(viewsets.ModelViewSet):
+    queryset = MergedVideo.objects.all()
+    serializer_class = MergedVideoSerializer
+
+    def create(self, request, *args, **kwargs):
+        logger_info.info("Received request to merge videos.")
+        try:
+            # Validate the presence of 'trimmed_videos' in the request
+            trimmed_video_ids = request.data.get('trimmed_videos')
+            if not trimmed_video_ids:
+                message = "Please provide 'trimmed_videos'."
+                logger_error.error(f"Missing 'trimmed_videos': {message}")
+                return Response(success_false_response(message=message), status=status.HTTP_400_BAD_REQUEST)
+
+            # Fetch and validate the trimmed videos
+            trimmed_videos = []
+            for trimmed_video_id in trimmed_video_ids:
+                trimmed_video = get_object_or_404(TrimmedVideo, id=trimmed_video_id)
+                trimmed_videos.append(trimmed_video)
+                logger_debug.debug(f"Trimmed video {trimmed_video_id} retrieved for merging.")
+
+            if len(trimmed_videos) < 2:
+                message = "At least two trimmed videos are required to merge."
+                logger_error.error(f"Insufficient trimmed videos: {message}")
+                return Response(success_false_response(message=message), status=status.HTTP_400_BAD_REQUEST)
+
+            # Merge the videos
+            processor = VideoMediaProcessor(trimmed_videos[0].file)
+            merged_file_path = processor.merge_media(trimmed_videos)
+            logger_debug.debug(f"Merged file path: {merged_file_path}")
+
+            # Create the merged video instance
+            merged_video = MergedVideo.objects.create(
+                file=merged_file_path,
+                duration=sum([video.duration for video in trimmed_videos])
+            )
+            merged_video.trimmed_videos.set(trimmed_videos)
+            logger_info.info(f"Merged video created successfully with ID: {merged_video.id}")
+
+            serializer = self.get_serializer(merged_video)
+            return Response(
+                success_true_response(message="Videos merged successfully", data=serializer.data),
+                status=status.HTTP_201_CREATED
+            )
+
+        except ValidationError as e:
+            message = " ".join(e.messages)
+            logger_error.error(f"Validation error occurred: {message}")
+            return Response(success_false_response(message=message), status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            message = f"An unexpected error occurred: {str(e)}"
+            logger_error.error(f"Exception: {message}")
+            return Response(success_false_response(message=message), status=status.HTTP_500_INTERNAL_SERVER_ERROR)

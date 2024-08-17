@@ -41,3 +41,14 @@ class TrimmedVideo(models.Model):
 
     def __str__(self):
         return f"Trimmed video {self.id} from {self.start_time} to {self.end_time} seconds"
+
+
+class MergedVideo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    trimmed_videos = models.ManyToManyField(TrimmedVideo, related_name='merged_videos')
+    file = models.FileField(upload_to="merged_videos/", validators=[validate_video_file_extension], null=True, blank=True)
+    duration = models.FloatField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Merged video {self.id} created from trimming clips"

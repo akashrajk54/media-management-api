@@ -54,15 +54,18 @@ class VideoMediaProcessor(BaseMediaProcessor):
         # Return the path relative to MEDIA_URL
         return os.path.relpath(output_file, settings.MEDIA_ROOT)
 
-    def merge_media(self, media_files):
-        clips = []
+    def merge_media(self, trimmed_videos):
         try:
-            for media_file in media_files:
-                clip = VideoFileClip(media_file.path)
-                clips.append(clip)
+            # Ensure the directory exists
+            output_directory = os.path.join(settings.MEDIA_ROOT, "merged_videos/")
+            os.makedirs(output_directory, exist_ok=True)
 
+            # Construct the output file path with a timestamp
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            output_file = os.path.join(output_directory, f"merged_video_{timestamp}.mp4")
+
+            clips = [VideoFileClip(video.file.path) for video in trimmed_videos]
             final_clip = concatenate_videoclips(clips)
-            output_file = f"merged_videos/merged_{os.path.basename(media_files[0].name)}"
             final_clip.write_videofile(output_file, codec="libx264")
         except Exception as e:
             raise ValidationError(f"Cannot merge media files: {str(e)}")
@@ -70,4 +73,5 @@ class VideoMediaProcessor(BaseMediaProcessor):
             for clip in clips:
                 clip.close()
 
-        return output_file
+        # Return the path relative to MEDIA_URL
+        return os.path.relpath(output_file, settings.MEDIA_ROOT)
