@@ -1,7 +1,11 @@
+import os
+
 from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 from django.conf import settings
 from urllib.parse import urlencode
 from django.core.exceptions import ValidationError
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def success_true_response(message=None, data=None, count=None):
@@ -48,8 +52,9 @@ class LinkGenerator:
         return f"{settings.SITE_URL}/access-shared-video/?{query_params}"
 
     @staticmethod
-    def validate_link(token, max_age_minutes=30):
+    def validate_link(token):
         try:
+            max_age_minutes = os.getenv('link_max_age_minutes', 30)
             merged_video_id = LinkGenerator.signer.unsign(token, max_age=max_age_minutes * 60)
             return merged_video_id
         except SignatureExpired:

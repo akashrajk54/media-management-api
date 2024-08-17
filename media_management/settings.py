@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -211,11 +213,11 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR + "/" + "media"
 
 # Settings for video upload limits
-MAX_VIDEO_SIZE_MB = 25
-MIN_VIDEO_DURATION_SEC = 5
-MAX_VIDEO_DURATION_SEC = 300
+MAX_VIDEO_SIZE_MB = os.getenv('MAX_VIDEO_SIZE_MB', 25)
+MIN_VIDEO_DURATION_SEC = os.getenv('MIN_VIDEO_DURATION_SEC', 5)
+MAX_VIDEO_DURATION_SEC = os.getenv('MAX_VIDEO_DURATION_SEC', 300)
 
-SITE_URL = "http://127.0.0.1:8000"
+SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000')
 
 # SMTP email backend
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
