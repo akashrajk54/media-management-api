@@ -9,6 +9,9 @@ logger_error = logging.getLogger("error")
 
 class StaticTokenAuthentication(BaseAuthentication):
     def authenticate(self, request):
+        if request.method == "GET":
+            return None, None
+
         token = request.headers.get("Authorization")
 
         if not token:

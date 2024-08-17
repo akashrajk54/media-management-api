@@ -207,10 +207,20 @@ LOGGING = {
     "loggers": LOGGERS,
 }
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR + '/' + 'media'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR + "/" + "media"
 
 # Settings for video upload limits
 MAX_VIDEO_SIZE_MB = 25
 MIN_VIDEO_DURATION_SEC = 5
 MAX_VIDEO_DURATION_SEC = 300
+
+SITE_URL = "http://127.0.0.1:8000"
+
+# SMTP email backend
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "******"
+EMAIL_HOST_PASSWORD = "******"

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backends_engine.models import (VideoUpload, TrimmedVideo, MergedVideo)
+from backends_engine.models import VideoUpload, TrimmedVideo, MergedVideo
 
 
 class UploadedVideoSerializer(serializers.ModelSerializer):
@@ -23,8 +23,8 @@ class UploadedVideoSerializer(serializers.ModelSerializer):
 class TrimmedVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrimmedVideo
-        fields = ['id', 'parent_video', 'start_time', 'end_time', 'file', 'duration', 'created_at']
-        read_only_fields = ['file', 'duration', 'created_at']
+        fields = ["id", "parent_video", "start_time", "end_time", "file", "duration", "created_at"]
+        read_only_fields = ["file", "duration", "created_at"]
 
 
 class MergedVideoSerializer(serializers.ModelSerializer):
@@ -33,8 +33,8 @@ class MergedVideoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MergedVideo
-        fields = ['id', 'trimmed_videos', 'file', 'duration', 'created_at']
-        read_only_fields = ['file', 'duration', 'created_at']
+        fields = ["id", "trimmed_videos", "file", "duration", "created_at"]
+        read_only_fields = ["file", "duration", "created_at"]
 
     def validate_trimmed_videos(self, value):
         """
@@ -43,4 +43,3 @@ class MergedVideoSerializer(serializers.ModelSerializer):
         if len(value) < 2:
             raise serializers.ValidationError("At least two trimmed videos are required to merge.")
         return value
-

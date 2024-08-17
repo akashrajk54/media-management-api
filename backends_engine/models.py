@@ -26,16 +26,17 @@ class VideoUpload(models.Model):
 
 def get_trimmed_video_upload_path(instance, filename):
     # Constructs a path under 'MEDIA_ROOT/trimmed_videos/<filename>'
-    return os.path.join('trimmed_videos', filename)
+    return os.path.join("trimmed_videos", filename)
 
 
 class TrimmedVideo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    parent_video = models.ForeignKey(VideoUpload, on_delete=models.CASCADE, related_name='trimmed_clips')
+    parent_video = models.ForeignKey(VideoUpload, on_delete=models.CASCADE, related_name="trimmed_clips")
     start_time = models.FloatField(help_text="Start time in seconds")
     end_time = models.FloatField(help_text="End time in seconds")
-    file = models.FileField(upload_to=get_trimmed_video_upload_path, validators=[validate_video_file_extension],
-                            null=True, blank=True)
+    file = models.FileField(
+        upload_to=get_trimmed_video_upload_path, validators=[validate_video_file_extension], null=True, blank=True
+    )
     duration = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -45,8 +46,10 @@ class TrimmedVideo(models.Model):
 
 class MergedVideo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    trimmed_videos = models.ManyToManyField(TrimmedVideo, related_name='merged_videos')
-    file = models.FileField(upload_to="merged_videos/", validators=[validate_video_file_extension], null=True, blank=True)
+    trimmed_videos = models.ManyToManyField(TrimmedVideo, related_name="merged_videos")
+    file = models.FileField(
+        upload_to="merged_videos/", validators=[validate_video_file_extension], null=True, blank=True
+    )
     duration = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

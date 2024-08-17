@@ -4,7 +4,7 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 from datetime import datetime
 
 from media_management import settings
-from .base_media_processor import BaseMediaProcessor
+from backends_engine.abstract_classes import BaseMediaProcessor
 from django.core.exceptions import ValidationError
 
 

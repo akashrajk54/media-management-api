@@ -36,3 +36,10 @@ class BaseMediaProcessor(ABC):
     def merge_media(self, media_files):
         """Merge the given list of media files and return the merged media file path."""
         pass
+
+
+class EmailSender(ABC):
+    @abstractmethod
+    def send_email(self, subject, message, recipient_list, from_email=None):
+        """Send an email to the given recipients."""
+        pass
