@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backends_engine.models import VideoUpload
+from backends_engine.models import VideoUpload, TrimmedVideo
 
 
 class UploadedVideoSerializer(serializers.ModelSerializer):
@@ -18,3 +18,10 @@ class UploadedVideoSerializer(serializers.ModelSerializer):
             )
 
         return value
+
+
+class TrimmedVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrimmedVideo
+        fields = ['id', 'parent_video', 'start_time', 'end_time', 'file', 'duration', 'created_at']
+        read_only_fields = ['file', 'duration', 'created_at']

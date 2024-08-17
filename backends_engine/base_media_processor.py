@@ -1,11 +1,8 @@
-import os
-import cv2
-import tempfile
 from abc import ABC, abstractmethod
 from django.core.exceptions import ValidationError
 
 
-class MediaProcessor(ABC):
+class BaseMediaProcessor(ABC):
     def __init__(self, media_file):
         self.media_file = media_file
 
@@ -30,24 +27,12 @@ class MediaProcessor(ABC):
 
         return file_size, duration
 
+    @abstractmethod
+    def trim_media(self, start_time, end_time):
+        """Trim the media from start_time to end_time and return the trimmed media file path."""
+        pass
 
-class OpenCVMediaProcessor(MediaProcessor):
-    def calculate_duration(self):
-
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_file:
-            for chunk in self.media_file.chunks():
-                temp_file.write(chunk)
-            temp_file_path = temp_file.name
-
-        cap = cv2.VideoCapture(temp_file_path)
-        if not cap.isOpened():
-            os.remove(temp_file_path)
-            raise ValidationError("Cannot open media file.")
-
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        duration = frame_count / fps
-        cap.release()
-        os.remove(temp_file_path)
-
-        return duration
+    @abstractmethod
+    def merge_media(self, media_files):
+        """Merge the given list of media files and return the merged media file path."""
+        pass

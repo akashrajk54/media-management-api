@@ -18,7 +18,7 @@ class TestUploadedVideoViewSet:
         self.client.force_authenticate(user=self.user)
         self.url = reverse("videos-list")
 
-    @patch("backends_engine.media_processor.OpenCVMediaProcessor.validate_media", return_value=(5.0, 10.0))
+    @patch("backends_engine.video_media_processor.VideoMediaProcessor.validate_media", return_value=(5.0, 10.0))
     def test_upload_video_success(self, mock_validate_media):
         video_data = SimpleUploadedFile("test_video.mp4", b"fake_video_content", content_type="video/mp4")
 
@@ -30,7 +30,7 @@ class TestUploadedVideoViewSet:
         assert VideoUpload.objects.count() == 1
         assert "id" in response.data["data"]
 
-    @patch("backends_engine.media_processor.OpenCVMediaProcessor.validate_media", return_value=(5.0, 10.0))
+    @patch("backends_engine.video_media_processor.VideoMediaProcessor.validate_media", return_value=(5.0, 10.0))
     def test_upload_no_file_provided(self, mock_validate_media):
         data = {}
 
@@ -40,7 +40,7 @@ class TestUploadedVideoViewSet:
         assert response.data["message"] == "No video file was provided. Please upload a valid video file."
         assert VideoUpload.objects.count() == 0
 
-    @patch("backends_engine.media_processor.OpenCVMediaProcessor.validate_media", return_value=(5.0, 10.0))
+    @patch("backends_engine.video_media_processor.VideoMediaProcessor.validate_media", return_value=(5.0, 10.0))
     def test_upload_invalid_file_format(self, mock_validate_media):
         invalid_file = tempfile.NamedTemporaryFile(suffix=".txt").name
         file_data = SimpleUploadedFile(invalid_file, b"invalid_content", content_type="text/plain")

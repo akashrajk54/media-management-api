@@ -22,3 +22,22 @@ class VideoUpload(models.Model):
 
     def __str__(self):
         return f"Video {self.id} uploaded at {self.uploaded_at}"
+
+
+def get_trimmed_video_upload_path(instance, filename):
+    # Constructs a path under 'MEDIA_ROOT/trimmed_videos/<filename>'
+    return os.path.join('trimmed_videos', filename)
+
+
+class TrimmedVideo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    parent_video = models.ForeignKey(VideoUpload, on_delete=models.CASCADE, related_name='trimmed_clips')
+    start_time = models.FloatField(help_text="Start time in seconds")
+    end_time = models.FloatField(help_text="End time in seconds")
+    file = models.FileField(upload_to=get_trimmed_video_upload_path, validators=[validate_video_file_extension],
+                            null=True, blank=True)
+    duration = models.FloatField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Trimmed video {self.id} from {self.start_time} to {self.end_time} seconds"
