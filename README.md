@@ -30,18 +30,25 @@ A Django-based REST API service for video file management, allowing users to upl
             ALLOWED_HOSTS = insted of ['*'], please add specific frontend url, so that request from anyother will be rejected.
 
    7. Run migrations to create the database schema:
-      python manage.py makemigrations
+
+      python manage.py makemigrations backends_engine
+
       python manage.py migrate
 
    8. Create a superuser (admin) account:
+
       python manage.py createsuperuser
 
    9. Run the development server:
+
       python manage.py runserver
+
       (by default it will use 8000 port)
 
    10. To run test cases:
+
        cd backends_engine
+
        pytest test.py
 
 

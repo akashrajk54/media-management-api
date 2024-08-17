@@ -54,7 +54,7 @@ class LinkGenerator:
     @staticmethod
     def validate_link(token):
         try:
-            max_age_minutes = os.getenv('link_max_age_minutes', 30)
+            max_age_minutes = float(os.getenv('link_max_age_minutes', 30))
             merged_video_id = LinkGenerator.signer.unsign(token, max_age=max_age_minutes * 60)
             return merged_video_id
         except SignatureExpired:
