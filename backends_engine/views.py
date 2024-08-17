@@ -69,9 +69,9 @@ class UploadedVideoViewSet(viewsets.ModelViewSet):
 
             # Validate media file
             file_size, duration = processor.validate_media(
-                max_size_mb=settings.MAX_VIDEO_SIZE_MB,
-                min_duration=settings.MIN_VIDEO_DURATION_SEC,
-                max_duration=settings.MAX_VIDEO_DURATION_SEC,
+                max_size_mb=float(settings.MAX_VIDEO_SIZE_MB),
+                min_duration=float(settings.MIN_VIDEO_DURATION_SEC),
+                max_duration=float(settings.MAX_VIDEO_DURATION_SEC),
             )
             logger_debug.debug(f"Media validated: file_size={file_size}, duration={duration}")
 

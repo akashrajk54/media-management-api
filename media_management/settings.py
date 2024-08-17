@@ -141,6 +141,15 @@ API_STATIC_TOKEN = os.getenv('API_STATIC_TOKEN', '12345abcde67890fghij09876klmno
 # Logger configuration
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+log_dirs = [
+    os.path.join(BASE_DIR, "logs/error/"),
+    os.path.join(BASE_DIR, "logs/debug/"),
+    os.path.join(BASE_DIR, "logs/info/"),
+]
+
+for log_dir in log_dirs:
+    Path(log_dir).mkdir(parents=True, exist_ok=True)
+
 # Formatters
 FORMATTERS = {
     "verbose": {

@@ -26,7 +26,9 @@ A Django-based REST API service for video file management, allowing users to upl
         Download .env file from shared email and keep it within **media-management-api** 
 
        ### During production 
+            
             Debug = False
+        
             ALLOWED_HOSTS = insted of ['*'], please add specific frontend url, so that request from anyother will be rejected.
 
    7. Run migrations to create the database schema:
@@ -49,7 +51,7 @@ A Django-based REST API service for video file management, allowing users to upl
        
        cd backends_engine
        
-       pytest test.py
+        pytest test.py
 
 
 ## Code Quality
