@@ -136,16 +136,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 API_STATIC_TOKEN = "12345abcde67890fghij09876klmnop54321"
 
 
-# TODO:Akash Load this from .env file
-# SMTP email backend
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "testnayara2@gmail.com"
-EMAIL_HOST_PASSWORD = "hakpzckvjzrbivrh"
-
-
 # Logger configuration
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -216,3 +206,11 @@ LOGGING = {
     "handlers": HANDLERS,
     "loggers": LOGGERS,
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR + '/' + 'media'
+
+# Settings for video upload limits
+MAX_VIDEO_SIZE_MB = 25
+MIN_VIDEO_DURATION_SEC = 5
+MAX_VIDEO_DURATION_SEC = 300
