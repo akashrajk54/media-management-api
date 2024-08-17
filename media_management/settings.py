@@ -135,7 +135,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # TODO:Akash Load this from .env file
-API_STATIC_TOKEN = "12345abcde67890fghij09876klmnop54321"
+API_STATIC_TOKEN = os.getenv('API_STATIC_TOKEN', '12345abcde67890fghij09876klmnop54321')
 
 
 # Logger configuration
