@@ -1,8 +1,8 @@
-# media-management-api
+## media-management-api
 A Django-based REST API service for video file management, allowing users to upload, trim, and merge video files. The service supports configurable size and duration limits, video link sharing with time-based expiry, and includes unit and end-to-end testing. Built with SQLite for easy setup and extensibility.
 
 
-# Setup
+## Setup
 
    1. Clone the repository:
        git clone https://github.com/akashrajk54/media-management-api.git
@@ -25,10 +25,9 @@ A Django-based REST API service for video file management, allowing users to upl
    6. Set up environment variables:
         Download .env file from shared email and keep it within **media-management-api** 
 
-       # During production 
+       ### During production 
             Debug = False
             ALLOWED_HOSTS = insted of ['*'], please add specific frontend url, so that request from anyother will be rejected.
-       # Please Update DEFAULT_THROTTLE_RATES into the settings currently set to 100/Hours
 
    7. Run migrations to create the database schema:
       python manage.py makemigrations
@@ -46,12 +45,12 @@ A Django-based REST API service for video file management, allowing users to upl
        pytest test.py
 
 
-# Code Quality
+## Code Quality
 
     The code adheres to SOLID principles and is designed with best practices for maintainability and scalability.
     Logging is implemented for debugging, error tracking, and informational purposes.
 
-# Contributing
+## Contributing
 
     Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
